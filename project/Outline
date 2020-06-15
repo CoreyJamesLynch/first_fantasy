@@ -1,0 +1,59 @@
+1. User stories.  What can a user do in your app?  How will they do it?
+
+
+As a user, I want to be able to pick my class to prepare for battle. (Create)
+
+As a user, I want to see my classes abilities. (Read)
+As a user, I want to select my ability. (Read)
+
+
+As a user, I want to add an ability after I level up. (Update)
+As a user, I want to be able to respec (change class). (Update)
+
+As a user, I want to be able to delete my account. (Destroy)
+
+
+
+2. Clear delineation as to what is MVP (minimum viable product) for your app versus stretch goals (things your app doesn't need, but would be nice to have)
+
+-------------------------------------------------------------------------------------
+MVP
+-------------------------------------------------------------------------------------
+As a user, I want to be able to pick my class to prepare for battle. (Create)
+
+As a user, I want to see my classes abilities. (Read)
+
+As a user, I want to add an ability after I level up. (Update)
+
+As a user, I want to be able to delete my account. (Destroy)
+
+-------------------------------------------------------------------------------------
+STRETCH GOALS
+-------------------------------------------------------------------------------------
+As a user, I want to be able to respec (change class). (Update)
+
+As a user, I want to select my ability. (Read)
+
+As a user, I want to select my equipment. (Read)
+
+
+
+3. An accurate diagram of your models with appropriate relationships (also called an ERD)
+
+(See PDF)
+
+
+
+4. Any relevant information to external APIs you might use, like if you need an API key.
+Please make sure you pitch your idea to one of us by 5 PM today!
+
+https://www.dnd5eapi.co/docs/ 
+
+dnd5eapi is a completely open API. No authentication is required to query and get data. This also means that we've limited what you can do to just GET-ing the data. 
+
+
+
+
+
+
+
