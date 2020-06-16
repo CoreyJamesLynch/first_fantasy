@@ -22,20 +22,22 @@ else
     hero = Player.create(player_name: player_name, player_class: player_class)
 end
 
+while(true)
+    selection = cont.prompt.select("What would you like to do?", %w(fight commit-seppuku change-class exit))
+        #binding.pry
+    if selection == "fight"
+        Encounter.fight(hero)
+    elsif selection == "commit-seppuku"
+        #binding.pry
+        Player.destroy(hero.id)
+        puts "Rest in pieces, hero"
+    elsif selection == "change-class"
 
-selection = cont.prompt.select("What would you like to do?", %w(fight commit-seppuku change-class))
-    #binding.pry
-if selection == "fight"
-    Encounter.fight(hero)
-elsif selection == "commit-seppuku"
-    #binding.pry
-    Player.destroy(hero.id)
-    puts "Rest in pieces, hero"
-elsif selection == "change-class"
-
-    new_class = cont.prompt.select("Pick a new class, #{player_name}", classes)
-    hero.update(player_class: new_class)
-    puts "Success! Here is your new wepon, hero"
+        new_class = cont.prompt.select("Pick a new class, #{player_name}", classes)
+        hero.update(player_class: new_class)
+        puts "Success! Here is your new wepon, hero"
+    else
+        break
+    end
 end
-
 #binding.pry
