@@ -63,41 +63,55 @@ class Encounter < ActiveRecord::Base
     end
 
     def encounter_battle(hero, monster)
-        player_hp = hero.hp
-        monster_hp = monster.hp
+    
+        # binding.pry
 
         if self.battle > 0 #this could be a method?
             puts "You slew the #{monster.monster_name}? Fine work #{hero.player_name}! The kind people here in Blue Daisy village can sleep tight now, here is your bounty."
             self.update(victory: true)
-            hero.update(hp: player_hp)
-            monster.update(hp: monster_hp)
+            self.player.update(hp: 100)
+            self.monster.update(hp: 100)
         else
             #binding.pry
             puts "You have suffered a crushing defeat"
             self.update(victory: false)
-            hero.update(hp: player_hp)
-            monster.update(hp: monster_hp)
+            self.player.update(hp: 100)
+            self.monster.update(hp: 100)
         end
+        # binding.pry
     end
 
     def battle
+        # binding.pry
         who = self.player
         while((self.player.hp > 0) && (self.monster.hp > 0))
+            puts "#{self.player.player_name} has #{self.player.hp} hp remaining and #{self.monster.monster_name} has #{self.monster.hp} hp remaining."
+            # binding.pry
             who = self.turn(who)
         end
         self.player.hp
     end
 
     def turn(who)
+        cont = Controller.new()
         attack = 3*rand(10) #3 d10
         if who == self.player
-            start_hp = self.monster.hp
-            self.monster.update(hp: start_hp - attack)
-            who = self.monster
-        else
-            start_hp = self.player.hp
-            self.player.update(hp: start_hp - attack)
-            who = self.player
+            choice = cont.prompt.select("Do your worst...", %w(Fight Flight))
+            
+            if choice == "Fight"
+                start_hp = self.monster.hp
+                self.monster.update(hp: start_hp - attack)
+                who = self.monster
+            else
+                puts "Coward, you were the last hope!"
+                self.player.update(hp: 0)
+                who
+                # binding.pry
+            end
+        else 
+        start_hp = self.player.hp
+        self.player.update(hp: start_hp - attack)
+        who = self.player
         end
     end
 
