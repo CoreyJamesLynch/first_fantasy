@@ -31,6 +31,7 @@ while(true)
         #binding.pry
         Player.destroy(hero.id)
         puts "Rest in pieces, hero"
+        break
     elsif selection == "change-class"
 
         new_class = cont.prompt.select("Pick a new class, #{player_name}", classes)
