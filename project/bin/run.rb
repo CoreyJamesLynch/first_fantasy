@@ -6,7 +6,7 @@ player_name = gets.chomp
 if Player.find_by(player_name: player_name)
     Hero = Player.find_by(player_name: player_name)
 
-    puts "Welcome back brave soul !"
+    puts "Welcome back brave soul!"
 else
     puts "#{player_name} what class of hero are you?"
     
@@ -17,9 +17,14 @@ end
 
 puts "Brave hero, many monsters threaten this village. Which bounty do you wish to take."
 
+encounters = Encounter.where(player: hero)
+
+if encounters.find {|encounter| encounter.monster = bugbear}
+
+
 Monster.all.each do |monster|
+    if 
     puts monster.monster_name
-end
 
 monster_selection = gets.chomp
 
