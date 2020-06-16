@@ -1,7 +1,7 @@
 class Encounter < ActiveRecord::Base
     belongs_to :monster
     belongs_to :player, dependent: :delete
-    def self.fight(hero, player_name, player_class)
+    def self.fight(hero, player_name)
         encounters = Encounter.where(player: hero)
         #binding.pry
         if !(encounters == [])
