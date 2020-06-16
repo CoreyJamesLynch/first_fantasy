@@ -26,7 +26,7 @@ end
 selection = cont.prompt.select("What would you like to do?", %w(fight commit-seppuku change-class))
     #binding.pry
 if selection == "fight"
-    Encounter.fight(hero, player_name)
+    Encounter.fight(hero)
 elsif selection == "commit-seppuku"
     #binding.pry
     Player.destroy(hero.id)
