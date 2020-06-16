@@ -1,22 +1,21 @@
 class Encounter < ActiveRecord::Base
     belongs_to :monster
     belongs_to :player, dependent: :delete
-    def self.fight(hero)
+    def self.fight(hero, cont)
         encounters = Encounter.where(player: hero)
         player_name = hero.player_name
         #binding.pry
         if !(encounters == [])
             #binding.pry
             if encounters.length != Monster.all.length
-                puts "Brave hero, many monsters threaten this village. Which bounty do you wish to take."
-                Monster.all.each do |monster|
+                monsters = Monster.all.map do |monster|
                     #binding.pry
-                    if !(encounters.find{|encounter| encounter.monster == monster})
-                        puts monster.monster_name
+                    if !(encounters.find{|encounter| (encounter.monster == monster) && (encounter.victory == true)}) 
+                        monster.monster_name
                         #binding.pry
                     end
                 end
-                monster_selection = gets.chomp
+                monster_selection = cont.prompt.select("Brave hero, many monsters threaten this village. Which bounty do you wish to take.", monsters)
     
                 monster_object = Monster.find_by(monster_name: monster_selection)
     
@@ -30,11 +29,12 @@ class Encounter < ActiveRecord::Base
                 puts "You've fought all of the monsters #{player_name}! Expansion coming soon, please look forward to it."
             end
         else
-            puts "Brave hero, many monsters threaten this village. Which bounty do you wish to take."
-            Monster.all.each do |monster|
-                puts monster.monster_name
+            
+            monsters = Monster.all.map do |monster|
+             monster.monster_name
             end
-            monster_selection = gets.chomp
+            
+            monster_selection = cont.prompt.select("Brave hero, many monsters threaten this village. Which bounty do you wish to take.", monsters)
     
             monster_object = Monster.find_by(monster_name: monster_selection)
     
@@ -44,6 +44,7 @@ class Encounter < ActiveRecord::Base
             # Encounter.find_by(player: hero, monster: monster_object)
     
             puts "You slew the #{monster_selection}? Fine work #{player_name}! The kind people here in Blue Daisy village can sleep tight now, here is your bounty."
+            battle.update(victory: true)
         end
     end
 end

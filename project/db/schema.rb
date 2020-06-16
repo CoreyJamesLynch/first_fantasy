@@ -15,16 +15,19 @@ ActiveRecord::Schema.define(version: 2020_06_15_214625) do
   create_table "encounters", force: :cascade do |t|
     t.integer "player_id"
     t.integer "monster_id"
+    t.boolean "victory"
   end
 
   create_table "monsters", force: :cascade do |t|
     t.string "monster_name"
     t.string "monster_type"
+    t.integer "hp", default: 100
   end
 
   create_table "players", force: :cascade do |t|
     t.string "player_name"
     t.string "player_class"
+    t.integer "hp", default: 100
   end
 
 end
