@@ -9,11 +9,11 @@ class Encounter < ActiveRecord::Base
         if !(encounters == [])
             #binding.pry
             if (encounters.length != Monster.all.length)||(encounters_won.length != encounters.length)
-                monsters = Monster.all.map do |monster|
-                    #binding.pry
+                monsters = []
+                
+                Monster.all.each do |monster|
                     if !(encounters.find{|encounter| (encounter.monster == monster) && (encounter.victory == true)}) 
-                        monster.monster_name
-                        #binding.pry
+                        monsters << monster.monster_name
                     end
                 end
 
@@ -28,8 +28,10 @@ class Encounter < ActiveRecord::Base
                 end
 
                 encounter.encounter_battle(hero, monster_object)
-
-                if encounters_won.length == Monster.all.length
+                
+                encounters_now = Encounter.where(player: hero)
+                encounters_won_now = encounters_now.select{|encounter| encounter.victory == true}
+                if encounters_won_now.length == Monster.all.length
                     puts "Congrats #{player_name}, you have defeated all the monsters!!"
                 end
 
@@ -63,20 +65,22 @@ class Encounter < ActiveRecord::Base
     end
 
     def encounter_battle(hero, monster)
+        hero_hp = hero.hp
+        monster_hp = monster.hp
     
         # binding.pry
 
         if self.battle > 0 #this could be a method?
             puts "You slew the #{monster.monster_name}? Fine work #{hero.player_name}! The kind people here in Blue Daisy village can sleep tight now, here is your bounty."
             self.update(victory: true)
-            self.player.update(hp: 100)
-            self.monster.update(hp: 100)
+            self.player.update(hp: hero_hp)
+            self.monster.update(hp: monster_hp)
         else
             #binding.pry
             puts "You have suffered a crushing defeat"
             self.update(victory: false)
-            self.player.update(hp: 100)
-            self.monster.update(hp: 100)
+            self.player.update(hp: hero_hp)
+            self.monster.update(hp: monster_hp)
         end
         # binding.pry
     end
@@ -94,7 +98,7 @@ class Encounter < ActiveRecord::Base
 
     def turn(who)
         cont = Controller.new()
-        attack = 3*rand(10) #3 d10
+        attack = rand(1..10) + rand(1..10) + rand(1..10) #3 d10
         if who == self.player
             choice = cont.prompt.select("Do your worst...", %w(Fight Flight))
             
@@ -109,9 +113,10 @@ class Encounter < ActiveRecord::Base
                 # binding.pry
             end
         else 
-        start_hp = self.player.hp
-        self.player.update(hp: start_hp - attack)
-        who = self.player
+            puts "The #{self.monster.monster_name} attacks you for #{attack} damage!"
+            start_hp = self.player.hp
+            self.player.update(hp: start_hp - attack)
+            who = self.player
         end
     end
 
