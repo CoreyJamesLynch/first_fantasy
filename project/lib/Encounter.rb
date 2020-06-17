@@ -35,8 +35,7 @@ class Encounter < ActiveRecord::Base
                     puts "Congrats #{player_name}, you have defeated all the monsters!!"
                 end
 
-                new_money = encounter.player.money
-                hero.update(money: new_money)
+                encounter.check(hero)
 
             else
                 puts "You've fought all of the monsters #{player_name}! Expansion coming soon, please look forward to it."
@@ -54,10 +53,23 @@ class Encounter < ActiveRecord::Base
             
             encounter.encounter_battle(hero, monster_object)
 
-            new_money = encounter.player.money
-            hero.update(money: new_money)
+            encounter.check(hero)
 
         end
+    end
+
+    def check(hero)
+        if self.victory
+        new_money = self.player.money
+            hero.update(money: new_money)
+            new_hp = self.player.hp
+            hero.update(hp: new_hp)
+        else
+            hero.update(hp: 100)
+            hero.update(money: 0)
+            puts "Yer quite beatup like, we're gonna need all the money ye gots for haulin' ye back to town."
+        end
+
     end
 
     def self.exists?(encounters, monster_object)
@@ -80,21 +92,21 @@ class Encounter < ActiveRecord::Base
             gold = rand(1..20)
             puts "You slew the #{monster.monster_name}? Fine work #{hero.player_name}! The kind people here in Blue Daisy village can sleep tight now, here is your bounty: #{gold} G"
             self.update(victory: true)
-            self.player.update(hp: hero_hp)
+            #self.player.update(hp: hero_hp)
             self.monster.update(hp: monster_hp)
             self.player.update(money: start_money+gold)
         else
             #binding.pry
             puts "You have suffered a crushing defeat"
             self.update(victory: false)
-            self.player.update(hp: hero_hp)
+            #self.player.update(hp: hero_hp)
             self.monster.update(hp: monster_hp)
         end
         # binding.pry
     end
 
     def battle
-        # binding.pry
+        #binding.pry
         who = self.player
         while((self.player.hp > 0) && (self.monster.hp > 0))
             puts "#{self.player.player_name} has #{self.player.hp} hp remaining and #{self.monster.monster_name} has #{self.monster.hp} hp remaining."
@@ -102,6 +114,7 @@ class Encounter < ActiveRecord::Base
             who = self.turn(who)
         end
         self.player.hp
+        #binding.pry
     end
 
     def turn(who)
