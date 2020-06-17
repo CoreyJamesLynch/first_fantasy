@@ -2,11 +2,7 @@ require_relative '../config/environment'
 
 cont = Controller.new
 
-classes = ["Warrior", "Ranger", "Bard", "Paladin", "Black Mage", 
-"White Mage", "Red Mage", "Blue Mage", "Geomancer", "Time Mage",
- "Chemist", "Beast Tamer", "Theif", "Monk", "Barbarian", "Dark Knight",
-"White Knight", "Demon Hunter", "Warlock", "Sorcerer", "Gunbreaker", 
-"Samurai"]
+classes = Job.all.map { |job| job.job_name }
 
 puts "Welcome to the dungeon brave soul, what is your name?"
 player_name = gets.chomp
@@ -19,7 +15,9 @@ else
 
     player_class = cont.prompt.select("#{player_name} what class of hero are you?", classes)
 
-    hero = Player.create(player_name: player_name, player_class: player_class)
+    job = Job.find_by(job_name: player_class)
+
+    hero = Player.create(player_name: player_name, job: job)
 end
 
 while(true)
@@ -33,10 +31,13 @@ while(true)
         puts "Rest in pieces, hero"
         break
     elsif selection == "change-class"
-
         new_class = cont.prompt.select("Pick a new class, #{player_name}", classes)
-        hero.update(player_class: new_class)
-        puts "Success! Here is your new wepon, hero"
+        
+        job = Job.find_by(job_name: new_class)
+        
+        hero.update(job: job)
+        
+        puts "Success! Here is your new weapon, hero"
     else
         break
     end

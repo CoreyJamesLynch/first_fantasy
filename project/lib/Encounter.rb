@@ -99,10 +99,14 @@ class Encounter < ActiveRecord::Base
     def turn(who)
         cont = Controller.new()
         attack = rand(1..10) + rand(1..10) + rand(1..10) #3 d10
+        job_ability = self.player.job.abilities
+        special_skill = job_ability.map { |ability| ability.ability_name }
         if who == self.player
             choice = cont.prompt.select("Do your worst...", %w(Fight Flight))
             
             if choice == "Fight"
+                choice = cont.prompt.select("Make your move.", special_skill)
+                puts "You used #{choice} for #{attack} damage!"
                 start_hp = self.monster.hp
                 self.monster.update(hp: start_hp - attack)
                 who = self.monster
