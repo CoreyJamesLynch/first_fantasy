@@ -17,11 +17,11 @@ else
 
     job = Job.find_by(job_name: player_class)
 
-    hero = Player.create(player_name: player_name, job: job)
+    hero = Player.create(player_name: player_name, job: job, money: 0)
 end
 
 while(true)
-    selection = cont.prompt.select("What would you like to do?", %w(fight commit-seppuku change-class exit))
+    selection = cont.prompt.select("What would you like to do?", %w(fight commit-seppuku change-class money exit))
         #binding.pry
     if selection == "fight"
         Encounter.fight(hero, cont)
@@ -31,13 +31,25 @@ while(true)
         puts "Rest in pieces, hero"
         break
     elsif selection == "change-class"
-        new_class = cont.prompt.select("Pick a new class, #{player_name}", classes)
-        
-        job = Job.find_by(job_name: new_class)
-        
-        hero.update(job: job)
-        
-        puts "Success! Here is your new weapon, hero"
+        prompt = cont.prompt.select("It cost 10 G to change classes, proceed?", %w(yes no))
+        if prompt == "yes"
+            previous_money = hero.money
+            if previous_money >= 10
+                new_class = cont.prompt.select("Pick a new class, #{player_name}", classes)
+            
+                job = Job.find_by(job_name: new_class)
+                hero.update(job: job)
+                hero.update(money: previous_money - 10)
+            
+                puts "Success! Here is your new weapon, hero"
+            else
+                puts "You only have #{previous_money} G. Maybe save up a little more before trying again."
+            end
+        else
+            puts "Alrighty then, too rich for your blood, eh?"
+        end
+    elsif selection == "money"
+        puts "You have #{hero.money} G to your name, #{player_name}"
     else
         break
     end

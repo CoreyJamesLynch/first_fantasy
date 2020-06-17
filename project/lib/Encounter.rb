@@ -35,6 +35,9 @@ class Encounter < ActiveRecord::Base
                     puts "Congrats #{player_name}, you have defeated all the monsters!!"
                 end
 
+                new_money = encounter.player.money
+                hero.update(money: new_money)
+
             else
                 puts "You've fought all of the monsters #{player_name}! Expansion coming soon, please look forward to it."
             end
@@ -50,6 +53,9 @@ class Encounter < ActiveRecord::Base
             encounter = Encounter.create(player: hero , monster: monster_object)
             
             encounter.encounter_battle(hero, monster_object)
+
+            new_money = encounter.player.money
+            hero.update(money: new_money)
 
         end
     end
@@ -67,14 +73,16 @@ class Encounter < ActiveRecord::Base
     def encounter_battle(hero, monster)
         hero_hp = hero.hp
         monster_hp = monster.hp
-    
+        start_money = hero.money
         # binding.pry
 
         if self.battle > 0 #this could be a method?
-            puts "You slew the #{monster.monster_name}? Fine work #{hero.player_name}! The kind people here in Blue Daisy village can sleep tight now, here is your bounty."
+            gold = rand(1..20)
+            puts "You slew the #{monster.monster_name}? Fine work #{hero.player_name}! The kind people here in Blue Daisy village can sleep tight now, here is your bounty: #{gold} G"
             self.update(victory: true)
             self.player.update(hp: hero_hp)
             self.monster.update(hp: monster_hp)
+            self.player.update(money: start_money+gold)
         else
             #binding.pry
             puts "You have suffered a crushing defeat"
@@ -117,7 +125,7 @@ class Encounter < ActiveRecord::Base
                 # binding.pry
             end
         else 
-            puts "The #{self.monster.monster_name} attacks you for #{attack} damage!"
+            puts "The #{self.monster.monster_name} attacks you with #{self.monster.ability} for #{attack} damage!"
             start_hp = self.player.hp
             self.player.update(hp: start_hp - attack)
             who = self.player

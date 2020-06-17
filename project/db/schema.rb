@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_17_150355) do
+ActiveRecord::Schema.define(version: 2020_06_17_175130) do
 
   create_table "abilities", force: :cascade do |t|
     t.string "ability_name"
@@ -32,12 +32,14 @@ ActiveRecord::Schema.define(version: 2020_06_17_150355) do
     t.string "monster_name"
     t.string "monster_type"
     t.integer "hp", default: 100
+    t.string "ability"
   end
 
   create_table "players", force: :cascade do |t|
     t.string "player_name"
     t.integer "hp", default: 100
     t.integer "job_id"
+    t.integer "money"
   end
 
 end
