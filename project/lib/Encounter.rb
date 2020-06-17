@@ -23,6 +23,7 @@ class Encounter < ActiveRecord::Base
     
                 if existance
                     encounter = existance
+                    encounter.player.update(job: hero.job)
                 else
                     encounter = Encounter.create(player: hero , monster: monster_object)
                 end
@@ -126,10 +127,19 @@ class Encounter < ActiveRecord::Base
             choice = cont.prompt.select("Do your worst...", %w(Fight Flight))
             
             if choice == "Fight"
+                # binding.pry
                 choice = cont.prompt.select("Make your move.", special_skill)
+                attack = rand(1..4) * Ability.where(ability_name: choice)[0].damage
+                if attack > 0
                 puts "You used #{choice} for #{attack} damage!"
                 start_hp = self.monster.hp
                 self.monster.update(hp: start_hp - attack)
+                else
+                    start_hp = self.player.hp
+                    self.player.update(hp: start_hp - attack)
+                    puts "You used #{choice} to recover #{-attack} hp!"
+                    # binding.pry
+                end
                 who = self.monster
             else
                 puts "Coward, you were the last hope!"

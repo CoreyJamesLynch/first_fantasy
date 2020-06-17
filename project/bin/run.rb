@@ -18,7 +18,7 @@ else
 
     job = Job.find_by(job_name: player_class)
 
-    hero = Player.create(player_name: player_name, job: job, money: 0)
+    hero = Player.create(player_name: player_name, job: job, money: 0, max_hp: job.max_hp, hp: job.max_hp)
     $max_hp = hero.hp
     #binding.pry
 end
@@ -42,6 +42,7 @@ while(true)
             
                 job = Job.find_by(job_name: new_class)
                 hero.update(job: job)
+                hero.update(max_hp: job.max_hp)
                 hero.update(money: previous_money - 10)
             
                 puts "Success! Here is your new weapon, hero"
@@ -58,7 +59,7 @@ while(true)
             previous_money = hero.money
             if previous_money >= 10
                 puts "Alright, this may sting a bit. You're starting with only #{hero.hp} health after all."
-                hero.update(hp: $max_hp)
+                hero.update(hp: hero.max_hp)
                 hero.update(money: previous_money - 10)
                 puts "All done, you're back to #{hero.hp} health"
             else
